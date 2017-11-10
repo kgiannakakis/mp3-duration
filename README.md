@@ -4,7 +4,7 @@ Port of [node.js mp3-duration](https://github.com/ddsol/mp3-duration) to Python 
 ## Usage
 
 ```python
-import mp3_duration
+from mp3_duration import mp3_duration
 
 # Get duration in milli-seconds
 duration_ms = mp3_duration(filename)
