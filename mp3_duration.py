@@ -61,10 +61,12 @@ samples = {
 }
 
 def frame_size(samples, layer, bit_rate, sample_rate, paddingBit):
+    if sample_rate == 0:
+        return 0
     if layer == 1:
-        return (((samples * bit_rate * 125 / sample_rate) + paddingBit * 4)) | 0
+        return (((samples * bit_rate * 125 / sample_rate) + paddingBit * 4))
     else: #layer 2, 3
-        return (((samples * bit_rate * 125) / sample_rate) + paddingBit) | 0
+        return (((samples * bit_rate * 125) / sample_rate) + paddingBit)
 
 def parse_frame_header(header):
     b1 = header[1]
@@ -79,14 +81,14 @@ def parse_frame_header(header):
 
     bit_rate_key = 'V{0}L{1}'.format(simple_version, layer)
     bit_rate_index = (b2 & 0xf0) >> 4
-    if bit_rate_key in bit_rates:
+    if bit_rate_key in bit_rates and bit_rate_index != 15:
         bit_rate = bit_rates[bit_rate_key][bit_rate_index]
     else:
         bit_rate = 0
 
     sample_rate_idx = (b2 & 0x0c) >> 2
 
-    if version in sample_rates:
+    if version in sample_rates and sample_rate_idx < 3:
         sample_rate = sample_rates[version][sample_rate_idx]
     else:
         sample_rate = 0
@@ -104,6 +106,9 @@ def parse_frame_header(header):
 def estimate_duration(bitRate, offset, filesize):
     kbps = float((bitRate * 1000) / 8)
     datasize = filesize - offset
+
+    if kbps == 0:
+        return 0
 
     return round_duration(datasize / kbps)
 
