@@ -16,6 +16,6 @@ duration_ms = mp3_duration(filename, True)
 You can also run the tool from command line:
 
 ```Shell
-python mp3_duration path_to_mp3_file
-python mp3_duration -e path_to_mp3_file
+python mp3_duration.py path_to_mp3_file
+python mp3_duration.py -e path_to_mp3_file
 ```
